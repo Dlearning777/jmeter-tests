@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-        JMETER_HOME = "/opt/apache-jmeter-5.6.3" // Update if your JMeter is installed elsewhere
         REPORT_DIR = "report"
         RESULTS_FILE = "result.jtl"
-        TEST_PLAN = "sample-api-test.jmx" // Your test file
+        TEST_PLAN = "sample-api-test.jmx"
         PATH = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
     }
 
@@ -25,7 +24,7 @@ pipeline {
                     rm -rf ${REPORT_DIR}
 
                     echo "Running JMeter performance test..."
-                    ${JMETER_HOME}/bin/jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
+                    jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
                     """
                 }
             }
