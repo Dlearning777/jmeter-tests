@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPORT_DIR = "report"
         RESULTS_FILE = "result.jtl"
-        TEST_PLAN = "sample-api-test.jmx"
+        TEST_PLAN = "perf-test.jmx"
         PATH = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
     }
 
