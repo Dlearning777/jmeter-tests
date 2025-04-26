@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     environment {
-        JMETER_HOME = "/opt/apache-jmeter-5.6.3" // adjust this based on your install
+        JMETER_HOME = "/opt/apache-jmeter-5.6.3" // Update if your JMeter is installed elsewhere
         REPORT_DIR = "report"
         RESULTS_FILE = "result.jtl"
-        TEST_PLAN = "sample-api-test.jmx"
+        TEST_PLAN = "sample-api-test.jmx" // Your test file
+        PATH = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
     }
 
     stages {
@@ -17,14 +18,20 @@ pipeline {
 
         stage('Run JMeter Test') {
             steps {
-                sh """
-                rm -rf ${REPORT_DIR}
-                ${JMETER_HOME}/bin/jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
-                """
+                script {
+                    sh """
+                    #!/bin/bash
+                    echo "Cleaning old reports..."
+                    rm -rf ${REPORT_DIR}
+
+                    echo "Running JMeter performance test..."
+                    ${JMETER_HOME}/bin/jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
+                    """
+                }
             }
         }
 
-        stage('Publish Report') {
+        stage('Publish JMeter Report') {
             steps {
                 publishHTML (target: [
                     allowMissing: false,
