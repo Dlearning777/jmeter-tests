@@ -43,6 +43,36 @@ pipeline {
             }
         }
     }
+    stages {
+        // your stages (checkout, run JMeter, publishHTML)
+    }
+    post {
+        success {
+            emailext(
+                subject: "JMeter Test Report - Build #${env.BUILD_NUMBER}",
+                body: """
+                Hello Team,<br><br>
+                The latest JMeter performance test has completed successfully.<br>
+                <b>Summary:</b><br>
+                - Build: #${env.BUILD_NUMBER}<br>
+                - Status: SUCCESS<br><br>
+                You can view the detailed report <a href="${env.BUILD_URL}JMeter_20Performance_20Report/">here</a>.<br><br>
+                Regards,<br>
+                Jenkins
+                """,
+                mimeType: 'text/html',
+                to: 'learningdon6@gmail.com'
+            )
+        }
+        failure {
+            emailext(
+                subject: "JMeter Test Report - Build #${env.BUILD_NUMBER} FAILED",
+                body: "The JMeter test failed. Please check the Jenkins logs.",
+                to: 'learningdon6@gmail.com'
+            )
+        }
+    }
+}
 
     post {
         always {
