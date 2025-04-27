@@ -19,12 +19,11 @@ pipeline {
             steps {
                 script {
                     sh """
-                    #!/bin/bash
-                    echo "Cleaning old reports..."
-                    rm -rf ${REPORT_DIR}
+                        echo "Cleaning old reports..."
+                        rm -rf ${REPORT_DIR}
 
-                    echo "Running JMeter performance test..."
-                    jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
+                        echo "Running JMeter performance test..."
+                        jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
                     """
                 }
             }
@@ -43,20 +42,18 @@ pipeline {
             }
         }
     }
-    stages {
-        // your stages (checkout, run JMeter, publishHTML)
-    }
+
     post {
         success {
             emailext(
-                subject: "JMeter Test Report - Build #${env.BUILD_NUMBER}",
+                subject: "✅ JMeter Test Report - Build #${env.BUILD_NUMBER}",
                 body: """
                 Hello Team,<br><br>
-                The latest JMeter performance test has completed successfully.<br>
-                <b>Summary:</b><br>
+                The latest JMeter performance test completed successfully.<br><br>
+                <b>Details:</b><br>
                 - Build: #${env.BUILD_NUMBER}<br>
-                - Status: SUCCESS<br><br>
-                You can view the detailed report <a href="${env.BUILD_URL}JMeter_20Performance_20Report/">here</a>.<br><br>
+                - Status: <b>SUCCESS</b><br>
+                - Report: <a href="${env.BUILD_URL}JMeter_20Performance_20Report/">Click Here</a><br><br>
                 Regards,<br>
                 Jenkins
                 """,
@@ -66,15 +63,18 @@ pipeline {
         }
         failure {
             emailext(
-                subject: "JMeter Test Report - Build #${env.BUILD_NUMBER} FAILED",
-                body: "The JMeter test failed. Please check the Jenkins logs.",
+                subject: "❌ JMeter Test Report - Build #${env.BUILD_NUMBER} FAILED",
+                body: """
+                Hello Team,<br><br>
+                The JMeter test <b>FAILED</b>.<br><br>
+                Please check Jenkins build logs for details.<br><br>
+                Regards,<br>
+                Jenkins
+                """,
+                mimeType: 'text/html',
                 to: 'learningdon6@gmail.com'
             )
         }
-    }
-
-
-    post {
         always {
             archiveArtifacts artifacts: '**/*.jtl', fingerprint: true
         }
