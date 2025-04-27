@@ -19,11 +19,12 @@ pipeline {
             steps {
                 script {
                     sh """
-                        echo "Cleaning old reports..."
-                        rm -rf ${REPORT_DIR}
+                        echo "Cleaning old reports and result file..."
+                rm -rf ${REPORT_DIR}
+                rm -f ${RESULTS_FILE}
 
-                        echo "Running JMeter performance test..."
-                        jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
+                echo "Running JMeter performance test..."
+                jmeter -n -t ${TEST_PLAN} -l ${RESULTS_FILE} -e -o ${REPORT_DIR}
                     """
                 }
             }
