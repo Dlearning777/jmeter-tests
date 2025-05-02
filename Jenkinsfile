@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPORT_DIR = "report"
         RESULTS_FILE = "result.jtl"
-        TEST_PLAN = "perf-test.jmx"
+        TEST_PLAN = "influxdb-jmeter-testplan.jmx"
         PATH = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
     }
 
